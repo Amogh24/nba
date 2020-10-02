@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import Teams from './components/Teams'
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import teamService from './services/teams';
 
-function App() {
+const App = () => {
+  const [teams, setTeams] = useState([]);
+  useEffect(() => {
+    teamService.getAllTeams().then(res => {
+      setTeams(res.data);
+    });
+  }, []);
+  console.log(teams);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div align="center">
+      <Router>
+        <div>
+          <Link to="/teams">teams</Link>
+          <Link to="/players">players</Link>
+        </div>
+        <Switch>
+          <Route path="/teams">
+            <Teams teams={teams}/>
+          </Route>
+          <Route path='/players'>
+            <div>Players page coming up</div>
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
-}
+};
 
 export default App;
